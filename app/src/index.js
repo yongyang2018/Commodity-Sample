@@ -44,7 +44,7 @@ const App = {
           stats='下架';
         }
         html+=' <tr>'+
-          ' <td><input type="checkbox" style="width: 0px;" id="checkbox"  name="checkbox" data-id="'+result[4]+'"></td>'+
+          ' <td><input type="checkbox" style="width: 20px;" id="checkbox"  name="checkbox" data-id="'+result[4]+'"></td>'+
           ' <td id="">'+result[1]+'</td>'+
           ' <td>'+result[0]+'</td>'+
           ' <td>'+result[2]+'</td>'+
@@ -72,8 +72,9 @@ const App = {
       return 
     }
     const { saveinfo } = this.meta.methods;
-    await saveinfo(name,codes,count,status).send({ from: this.account ,gas: 3141592});
-    this.start();
+    await saveinfo(name,codes,count,status).send({from:this.account, gas: 3141592},function(){
+      location.reload();
+      });
   },
 
   selectOne: async function() {
@@ -132,8 +133,10 @@ const App = {
       return false;
     }
     const { update } = this.meta.methods;
-    update(dataid).send({ from: this.account});
-    this.start();
+    await  update(dataid).send({from:this.account, gas: 3141592},function(){
+      location.reload();
+      });
+    
   },
 };
 
@@ -153,25 +156,5 @@ window.addEventListener("load", function() {
       new Web3.providers.HttpProvider("http://127.0.0.1:7545"),
     );
   }
-
-  $("#codes").blur(function(){
-    var value =document.getElementById('codes').value;
-    if (/^[A-Z]+$/.test(value)){  
-        return true;   
-    }else{
-      alert("请输入大写英文字母");   
-      return; 
-    }    
-  });
-
-  $("#count").blur(function(){
-    var value =document.getElementById('count').value;
-    if (/^[0-9]+$/.test(value)){  
-        return true;   
-    }else{
-      alert("请输入整数");   
-      return; 
-    }    
-  });
   App.start();
 });
